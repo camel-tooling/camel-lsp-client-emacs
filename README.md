@@ -1,6 +1,8 @@
-This is a client implementation of the Apache Camel Language Server Protocol for Emacs
+## This is a client implementation of the Apache Camel Language Server Protocol for Emacs
+Link for Apache Camel Language Server 
+https://github.com/camel-tooling/camel-language-server/
 
-# Camel LSP client for Emacs
+# Text Editing capabilities of Camel URI with Camel XML DSL
 
 Code completion for Camel LS with XML LS
 
@@ -8,12 +10,14 @@ Code completion for Camel LS with XML LS
 
 NOTE: Completion is with Ctrl+Alt+i 
 
-## Prerequisites
+## prerequisites
+Java 11+ is required to be present on the System Path
 
+## How to configure Emacs
 
 In a `~/.emacs.d/init.el` file:
 
-```
+```lisp
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
@@ -35,11 +39,11 @@ In a `~/.emacs.d/init.el` file:
  
 (require 'lsp-mode)
 (add-hook 'nxml-mode-hook #'lsp)
+``` 
 
-```
 In a `~/.emacs.d/lsp-camel.el` file:
 
-```
+```lisp
 ;;; lsp-camel.el --- LSP Camel server integration        -*- lexical-binding: t; -*-
 
 
@@ -78,7 +82,7 @@ In a `~/.emacs.d/lsp-camel.el` file:
 'camells
 '(:system lsp-camel-jar-file)
 `(:download :url lsp-camel-jar-download-url
-            :store-path lsp-camel-jar-file))
+			:store-path lsp-camel-jar-file))
 
 (defcustom lsp-camel-server-command `("java" "-jar" , lsp-camel-jar-file)
  "Camel server command."
@@ -93,42 +97,43 @@ In a `~/.emacs.d/lsp-camel.el` file:
 
 (lsp-register-client
 (make-lsp-client :new-connection (lsp-camel--create-connection)
-                 :activation-fn (lsp-activate-on "xml")
-                 :priority 0
-                 :server-id 'camells
-                 :add-on? t
-                 :multi-root t
-                 :initialized-fn (lambda (workspace)
-                                   (with-lsp-workspace workspace
-                                     (lsp--set-configuration (lsp-configuration-section "camel"))))
-                 :download-server-fn (lambda (_client callback error-callback _update?)
-                                       (lsp-package-ensure 'camells callback error-callback))))
+				 :activation-fn (lsp-activate-on "xml")
+				 :priority 0
+				 :server-id 'camells
+				 :add-on? t
+				 :multi-root t
+				 :initialized-fn (lambda (workspace)
+								   (with-lsp-workspace workspace
+									 (lsp--set-configuration (lsp-configuration-section "camel"))))
+				 :download-server-fn (lambda (_client callback error-callback _update?)
+									   (lsp-package-ensure 'camells callback error-callback))))
 
 (lsp-consistency-check lsp-camel)
 
 (provide 'lsp-camel)
 ;;; lsp-camel.el ends here
-
 ```
 Opening the `lsp-camel.el` file
+
 Evaluating it by calling `M-x eval-buffer`
+
 Loading Camel LS by calling: `M-x lsp-install-server` and choosing `camells`
+
 Opening a `camel.xml` file with this kind of content:
 
-```
+```lisp
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-       http://camel.apache.org/schema/spring https://camel.apache.org/schema/spring/camel-spring.xsd">
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="
+	   http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://camel.apache.org/schema/spring https://camel.apache.org/schema/spring/camel-spring.xsd">
 
   <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
-    <route id="a route">
-      <from uri="timer:timerName?delay=1000&amp;exchangePattern=InvalidEnumValue"/>
-      <to uri="direct:drink"/>
-    </route>
+	<route id="a route">
+	  <from uri="timer:timerName?delay=1000&amp;exchangePattern=InvalidEnumValue"/>
+	  <to uri="direct:drink"/>
+	</route>
   </camelContext>
 </beans>
-
 ```
