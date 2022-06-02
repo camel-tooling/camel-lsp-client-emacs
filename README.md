@@ -1,19 +1,19 @@
 ## This is a client implementation of the Apache Camel Language Server Protocol for Emacs
+
 Link for Apache Camel Language Server 
-https://github.com/camel-tooling/camel-language-server/
+
 
 # Text Editing capabilities of Camel URI with Camel XML DSL
 
-Code completion for Camel LS with XML LS
+For instance, code completion for Camel XML Dsl. The capabilities are based on the [Camel Language Server](https://github.com/camel-tooling/camel-language-server/).
 
 ![Demo](images/camell.gif)
 
-NOTE: Completion is with Ctrl+Alt+i 
 
-## prerequisites
+## Prerequisites
 Java 11+ is required to be present on the System Path
 
-## How to configure Emacs
+# How to configure Emacs
 
 In a `~/.emacs.d/init.el` file:
 
@@ -121,7 +121,7 @@ Loading Camel LS by calling: `M-x lsp-install-server` and choosing `camells`
 
 Opening a `camel.xml` file with this kind of content:
 
-```lisp
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -137,3 +137,4 @@ Opening a `camel.xml` file with this kind of content:
   </camelContext>
 </beans>
 ```
+Then you can enjoy editing capabilities of Camel URI. For instance by calling completion with Ctrl+Alt+i in the uri attribute value.
