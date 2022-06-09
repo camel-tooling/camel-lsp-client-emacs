@@ -1,6 +1,7 @@
 ## This is a client implementation of the Apache Camel Language Server Protocol for Emacs
 
-Link for Apache Camel Language Server 
+
+Link for Apache Camel Language Server
 
 
 # Text Editing capabilities of Camel URI with Camel XML DSL
@@ -8,6 +9,12 @@ Link for Apache Camel Language Server
 For instance, code completion for Camel XML Dsl. The capabilities are based on the [Camel Language Server](https://github.com/camel-tooling/camel-language-server/).
 
 ![Demo](images/camell.gif)
+
+# Text Editing capabilities of Camel URI with Camel JAVA DSL
+
+For instance, code completion for Camel JAVA Dsl. The capabilities are based on the [Camel Language Server](https://github.com/camel-tooling/camel-language-server/).
+
+![Demo](images/java.gif)
 
 
 ## Prerequisites
@@ -36,10 +43,17 @@ In a `~/.emacs.d/init.el` file:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
- 
+
+
 (require 'lsp-mode)
 (add-hook 'nxml-mode-hook #'lsp)
-``` 
+
+(require 'lsp-mode)
+(add-hook 'java-mode-hook #'lsp)
+```
+
+
+
 
 In a `~/.emacs.d/lsp-camel.el` file:
 
@@ -95,9 +109,11 @@ In a `~/.emacs.d/lsp-camel.el` file:
   (lambda () lsp-camel-server-command)
   (lambda () (f-exists? lsp-camel-jar-file))))
 
+
+
 (lsp-register-client
 (make-lsp-client :new-connection (lsp-camel--create-connection)
-				 :activation-fn (lsp-activate-on "xml")
+				 :activation-fn (lsp-activate-on "xml" "java")
 				 :priority 0
 				 :server-id 'camells
 				 :add-on? t
@@ -137,4 +153,37 @@ Opening a `camel.xml` file with this kind of content:
   </camelContext>
 </beans>
 ```
+
+Opening a `camel.java` file with this kind of content:
+
+```java
+package com.javacodegeeks.camel;
+
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
+
+public class CamelHelloWorldTimerExample {
+    public static void main(String[] args) throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        try {
+            context.addRoutes(new RouteBuilder() {
+                @Override
+                public void configure() throws Exception {
+                    from("timer://myTimer?period=2000")
+                    .setBody()
+                    .simple("Hello World Camel fired at ${header.firedTime}")
+                    .to("stream:out");
+                }
+            });
+            context.start();
+            Thread.sleep(10000);
+        } finally {
+            context.stop();
+        }
+    }
+}
+```
+
 Then you can enjoy editing capabilities of Camel URI. For instance by calling completion with Ctrl+Alt+i in the uri attribute value.
