@@ -1,5 +1,6 @@
 ## This is a client implementation of the Apache Camel Language Server Protocol for Emacs
 
+
 Link for Apache Camel Language Server
 
 
@@ -11,7 +12,7 @@ For instance, code completion for Camel XML Dsl. The capabilities are based on t
 
 # Text Editing capabilities of Camel URI with Camel JAVA DSL
 
-For instance, code completion for Camel Java Dsl. The capabilities are based on the [Camel Language Server](https://github.com/camel-tooling/camel-language-server/).
+For instance, code completion for Camel JAVA Dsl. The capabilities are based on the [Camel Language Server](https://github.com/camel-tooling/camel-language-server/).
 
 ![Demo](images/java.gif)
 
@@ -43,12 +44,16 @@ In a `~/.emacs.d/init.el` file:
  ;; If there is more than one, they won't work right.
  )
 
+
 (require 'lsp-mode)
 (add-hook 'nxml-mode-hook #'lsp)
 
 (require 'lsp-mode)
 (add-hook 'java-mode-hook #'lsp)
 ```
+
+
+
 
 In a `~/.emacs.d/lsp-camel.el` file:
 
@@ -105,6 +110,7 @@ In a `~/.emacs.d/lsp-camel.el` file:
   (lambda () (f-exists? lsp-camel-jar-file))))
 
 
+
 (lsp-register-client
 (make-lsp-client :new-connection (lsp-camel--create-connection)
 				 :activation-fn (lsp-activate-on "xml" "java")
@@ -147,6 +153,7 @@ Opening a `camel.xml` file with this kind of content:
   </camelContext>
 </beans>
 ```
+
 Opening a `camel.java` file with this kind of content:
 
 ```java
